@@ -7,10 +7,10 @@ data "terraform_remote_state" "eks" {
     region = var.region
   }
 }
-data "aws_eks_cluster" "name" {
+data "aws_eks_cluster" "this" {
   name = data.terraform_remote_state.eks.outputs.eks_cluster_name
 }
 
-data "aws_eks_cluster_auth" "eks_auth" {
+data "aws_eks_cluster_auth" "this" {
   name = data.terraform_remote_state.eks.outputs.eks_cluster_name
 }
