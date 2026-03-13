@@ -1,6 +1,5 @@
 provider "aws" {
   region = var.region
-  profile = "default"
 }
 provider "kubernetes" {
   host                   = local.cluster_endpoint
