@@ -1,26 +1,21 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: test-web
+  name: test-web-migrate
   namespace: test-web
-  labels:
-    app: test-web
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: test-web
+  backoffLimit: 2
   template:
-    metadata:
-      labels:
-        app: test-web
     spec:
+      restartPolicy: Never
       containers:
-        - name: test-web
+        - name: migrate
           image: ecr-endpoint
           imagePullPolicy: Always
-          ports:
-            - containerPort: 8000
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              python manage.py migrate
           env:
             - name: DB_NAME
               valueFrom:
@@ -62,36 +57,3 @@ spec:
                 secretKeyRef:
                   name: django-secret
                   key: DJANGO_ALLOWED_HOSTS
-          command: ["/bin/sh", "-c"]
-          args:
-            - >
-              gunicorn config.wsgi:application
-              --bind 0.0.0.0:8000
-          startupProbe:
-            httpGet:
-              path: /healthz
-              port: 8000
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 12
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8000
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8000
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
