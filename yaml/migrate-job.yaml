@@ -10,7 +10,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: migrate
-          image: 730335535410.dkr.ecr.ap-northeast-2.amazonaws.com/test_web:latest
+          image: "ecr-endpoint"
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: test-web
-          image: 730335535410.dkr.ecr.ap-northeast-2.amazonaws.com/test_web:latest
+          image: "ecr-endpoint"
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
